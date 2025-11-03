@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json
 import os
 from datetime import datetime, date, timedelta
@@ -6,7 +7,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.lib.units import mm
 from reportlab.platypus import Table, TableStyle
-from PyPDF2 import PdfReader
+#from PyPDF2 import PdfReader
 import textwrap
 import requests
 import xml.etree.ElementTree as ET
@@ -134,7 +135,7 @@ def create_invoice_pdf(config, invoice_id, output_path, emission_date, lang='en'
             'vat_note': 'VAT not applicable – art. 259-1 of the French Tax Code.',
             'exchange_rate_note': config.get('exchange_rate_note', ''),
             'account_holder': 'Account holder',
-            'routing_number': 'Routing number (ABA)',
+            'routing_number': 'Routing number (ACH)',
             'account_number': 'Account number',
             'account_type': 'Account type',
             'bank': 'Bank',
@@ -164,7 +165,7 @@ def create_invoice_pdf(config, invoice_id, output_path, emission_date, lang='en'
             'vat_note': 'TVA non applicable – art. 259-1 du Code général des impôts.',
             'exchange_rate_note': '',  # Will be set below
             'account_holder': 'Titulaire du compte',
-            'routing_number': 'Code de routage (ABA)',
+            'routing_number': 'Code de routage (ACH)',
             'account_number': 'Numéro de compte',
             'account_type': 'Type de compte',
             'bank': 'Banque',
@@ -405,7 +406,7 @@ def create_invoice_pdf(config, invoice_id, output_path, emission_date, lang='en'
     y, _ = draw_wrapped_text(c, f"{labels['account_type']}: {bank.get('account_type', '')}", margin, y, width - 2*margin, "Helvetica", 9, 11)
     y, _ = draw_wrapped_text(c, f"{labels['bank']}: {bank.get('bank', '')}", margin, y, width - 2*margin, "Helvetica", 9, 11)
     y, _ = draw_wrapped_text(c, f"{labels['bank_address']}: {bank.get('bank_address', '')}", margin, y, width - 2*margin, "Helvetica", 9, 11)
-    y, _ = draw_wrapped_text(c, f"{labels['account_address']}: {bank.get('account_address', '')}", margin, y, width - 2*margin, "Helvetica", 9, 11)
+    # y, _ = draw_wrapped_text(c, f"{labels['account_address']}: {bank.get('account_address', '')}", margin, y, width - 2*margin, "Helvetica", 9, 11)
     y -= 20
 
     # Footer
@@ -440,7 +441,7 @@ def main():
 
     # --- Custom filename logic ---
     nome = config.get('output_name', 'Nicolas')
-    meses_en = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    meses_en = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     mes_en = meses_en[today.month - 1]
 
     # PDF em inglês
@@ -457,8 +458,8 @@ def main():
     config['invoice']['last_invoice_number'] = invoice_number
     write_config(config)
     # Extract and print PDF text
-    print("\nExtracted PDF text:")
-    print(extract_text_from_pdf(pdf_path))
+    #print("\nExtracted PDF text:")
+    #print(extract_text_from_pdf(pdf_path))
 
 if __name__ == "__main__":
     main()
